@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Document QA System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      margin: 0;
+    }
+
+    /* Main container for all content */
+    .container {
+      max-width: 1325px;
+      margin: auto;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(1,1,1,1);
+      overflow: hidden;
+      border: 2px solid #e2e6ea;
+    }
+
+    /* Header styles */
+    header {
+      background: #0067C5; /* Primary color */
+      color: #fff;
+
+      text-align: center;
+      padding: 18px 24px;
+      font-size: 1.6em;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* Content area padding */
+    .content {
+      padding: 22px 26px 28px;
+    }
+
+    /* Label styles for form fields */
+    label {
+      display: block;
+      margin-top: 14px;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    /* Input and textarea styling */
+    input[type="text"],
+    input[type="file"],
+    textarea {
+      width: 85%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #cfd8e3;
+      font-size: 1rem;
+      transition: border-color .2s ease, box-shadow .2s ease;
+      background: #fff;
+    }
+
+    /* Focus effect for better UX */
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #0067C5;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0,103,197,0.15);
+    }
+
+    /* Textarea specific styles */
+    textarea {
+      min-height: 50px;
+      resize: vertical;
+    }
+
+    /* Row class: for grid layout if needed */
+    .row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    /* Button group container */
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    /* Button styles */
+    button {
+      background: #0067C5; /* Primary color */
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: background .2s ease, transform .05s ease;
+    }
+
+    button:hover { background: #004080; } /* Darker shade on hover */
+    button:active { transform: translateY(1px); } /* Press effect */
+    button:disabled { background: #9bb9d4; cursor: not-allowed; }
+
+    /* Section container for answer or other info */
+    .section {
+      margin-top: 22px;
+      padding-top: 14px;
+      border-top: 1px solid #e2e6ea;
+    }
+
+    /* Section header styling */
+    .section h3 {
+      margin: 0 0 10px;
+      color:  #0067C5;
+      font-size: 1.15rem;
+    }
+
+    /* Preformatted text box for displaying answer */
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      background: #f7f7f7;
+      padding: 15px;
+      border-radius: 8px;
+      border: 1px solid #e6e6e6;
+      max-height: 360px;
+      overflow: auto;
+      font-size: 1rem;
+      line-height: 1.45;
+    }
+
+    /* Pill style (not currently used but available) */
+    .pill {
+      display: inline-block;
+      background: #eef4fb;
+      color: #254872;
+      border: 1px solid #d7e5f6;
+      padding: 6px 10px;
+      border-radius: 18px;
+      font-size: .85rem;
+      margin-top: 6px;
+    }
+  </style>
+
+</head>
+<body>
+  
+  <div class="container">
+    <!-- Page header -->
+    <header>Document-Based Question Answering</header>
+
+    <div class="content">
+      <!-- Form for uploading documents, entering text, and asking question -->
+      <form method="POST" enctype="multipart/form-data">
+        
+        <!-- Upload multiple documents -->
+        <label>Upload Documents (.pdf, .txt, .docx) [Multiple allowed]:</label>
+        <input type="file" name="files" accept=".pdf,.txt,.docx" multiple />
+
+        <!-- Text input for ad-hoc queries -->
+        <label>Enter Text Directly:</label>
+        <textarea name="text_input" rows="5" placeholder="Enter your text here..."></textarea>
+
+        <!-- Question input -->
+        <label>Enter your Question:</label>
+        <textarea name="question" rows="2" placeholder="Type your question here..." required></textarea>
+
+        <!-- Form buttons -->
+        <div class="actions">
+          <button type="submit">Get Answer</button>
+          <button type="reset">Reset</button>
+        </div>
+      </form>
+
+
+      <!-- Section to display answer returned from backend -->
+      <div class="section">
+        <h3>Answer:</h3>
+
+        {% if answers %}
+          {% for ans in answers %}
+            <pre>{{ ans.text | safe }}</pre>
+
+            <div class="pill">Confidence: {{ ans.confidence }}</div>
+            <div class="pill">Source: {{ ans.source }}</div>
+            <br>
+          {% endfor %}
+        {% else %}
+          <pre>No answer available.</pre>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
